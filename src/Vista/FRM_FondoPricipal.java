@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import modelo.Jugador;
 import modelo.modelo_FRM_Principal;
 
 /**
@@ -19,27 +20,34 @@ import modelo.modelo_FRM_Principal;
  */
 public class FRM_FondoPricipal extends javax.swing.JFrame {
     GameOver gameOver;
+    boolean muerto= true;
+    Ganador ganador;
+    
+    Registro_FRM_Principal registro;
     
      int contador=0;
-     int contarPuntos = 0;
+     int contarPuntos =0000;
         modelo_FRM_Principal hilos;
-        //Icon iconiUno,iconoDos;
+        
         AudioClip musica;
     public String estado="enelpiso";
    
-    public FRM_FondoPricipal() {
+    public FRM_FondoPricipal(Registro_FRM_Principal registro) {
         initComponents();
+        this.registro=registro;
+        Jugador jugador= new Jugador(registro.getNombre());
+        this.setVisible(false);
         this.setSize(1000, 280);
         this.setLocation(200, 100);
-       obstaculo1.setLocation(360, 290);
-        hilos= new modelo_FRM_Principal(this);
+        obstaculo1.setLocation(370, 198);
+        hilos= new modelo_FRM_Principal(this,registro);
         hilos.start();
         this.setLocationRelativeTo(null);
-         gameOver= new GameOver(this);
-//        iconiUno= new ImageIcon(getClass().getResource("../imagen/1.png"));
-//        iconoDos= new ImageIcon(getClass().getResource("../imagen/4.png"));
-          musica= newAudioClip(getClass().getResource("/Musica/Iron.wav"));
-           musica.play(); 
+        gameOver= new GameOver(this,jugador);
+        musica= newAudioClip(getClass().getResource("/Musica/Iron.wav"));
+        musica.play(); 
+        ganador();
+        
     }
     
 
@@ -56,6 +64,7 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
          {
            jl_Fondo.setLocation(0,jl_Fondo.getY() );
          }
+        
     }//fin de fondo 
      
      
@@ -65,7 +74,8 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
         if(obstaculo1.getX()>-400&& obstaculo2.getX()>-700)
         {
             this.obstaculo1.setLocation(obstaculo1.getX()-45,obstaculo1.getY());
-            this.obstaculo2.setLocation(obstaculo2.getX()-50,obstaculo2.getY());
+            this.obstaculo2.setLocation(obstaculo2.getX()-40,obstaculo2.getY());
+             
         }
         else 
          {
@@ -83,12 +93,21 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
     {
         if(personaje.getX()+50>obstaculo1.getX()&& obstaculo1.getX()+70>personaje.getX()&& personaje.getY()+70>obstaculo1.getY()&& personaje.getY()<obstaculo1.getY()+70)
         {
-           // JOptionPane.showMessageDialog(null,"Perdió");
-           
+                    
             gameOver.setVisible(true);
+            gameOver.puntos(numeros_Puntaje.getText());
             this.setVisible(false);
             musica.stop();
            
+             muerto= true;
+            
+            
+           
+        }
+        else
+        {
+            muerto=false;
+            contarPuntos++;
         }
         
         if (  personaje.getX()+60>obstaculo2.getX()&& obstaculo2.getX()+100>personaje.getX()&& personaje.getY()+100>obstaculo2.getY()&& personaje.getY()<obstaculo2.getY()+90)
@@ -97,9 +116,47 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
            gameOver.setVisible(true);
            this.setVisible(false);
            musica.stop();
+        
+           muerto= true;
+          
             
         }
+        else
+        {
+            muerto=false;
+            contarPuntos++;
+            
+        }
+        
+        
     }
+        public void detener()
+        {
+            if(muerto)
+            {
+                hilos.stop();
+            }
+            
+        }
+        public void ganador()
+        {
+            if (contarPuntos==40)
+            {
+                ganador= new Ganador(this);
+                ganador.setVisible(true);
+            }
+            
+        }
+   public void puntosEnAsenso()
+   {
+       this.numeros_Puntaje.setText(Integer.toString(contarPuntos));
+   }
+   
+   public int contarPuntos()
+   {
+      return  Integer.parseInt( this.numeros_Puntaje.getText());
+   }
+   
    
   
 
@@ -117,35 +174,47 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
         obstaculo1 = new javax.swing.JLabel();
         jl_Fondo = new javax.swing.JLabel();
         numeros_Puntaje = new javax.swing.JLabel();
+        jl_Puntos = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(500, 400));
-        setPreferredSize(new java.awt.Dimension(700, 400));
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
             }
         });
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(null);
 
         personaje.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/Caberniola.gif"))); // NOI18N
         personaje.setToolTipText("");
-        getContentPane().add(personaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 200, 110, 140));
+        getContentPane().add(personaje);
+        personaje.setBounds(-10, 200, 110, 140);
 
         obstaculo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/dino2.gif"))); // NOI18N
-        getContentPane().add(obstaculo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 200, 240, 130));
+        getContentPane().add(obstaculo2);
+        obstaculo2.setBounds(710, 200, 240, 130);
         obstaculo2.getAccessibleContext().setAccessibleName("obstaculo2");
 
         obstaculo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/dino1.gif"))); // NOI18N
-        getContentPane().add(obstaculo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 140, 120));
+        getContentPane().add(obstaculo1);
+        obstaculo1.setBounds(360, 190, 150, 150);
 
         jl_Fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/fondo3.png"))); // NOI18N
-        getContentPane().add(jl_Fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, -1, 440));
+        getContentPane().add(jl_Fondo);
+        jl_Fondo.setBounds(-10, -60, 1400, 440);
         jl_Fondo.getAccessibleContext().setAccessibleName("jlFondo");
 
         numeros_Puntaje.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
         numeros_Puntaje.setText("oo");
-        getContentPane().add(numeros_Puntaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 60, -1));
+        getContentPane().add(numeros_Puntaje);
+        numeros_Puntaje.setBounds(70, 10, 50, 20);
+
+        jl_Puntos.setBackground(new java.awt.Color(0, 0, 204));
+        jl_Puntos.setFont(new java.awt.Font("Gisha", 0, 14)); // NOI18N
+        jl_Puntos.setForeground(new java.awt.Color(0, 0, 0));
+        jl_Puntos.setText("Puntos");
+        getContentPane().add(jl_Puntos);
+        jl_Puntos.setBounds(10, 10, 60, 17);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -182,45 +251,48 @@ public class FRM_FondoPricipal extends javax.swing.JFrame {
    
     
      
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FRM_FondoPricipal().setVisible(true);
-                
-                
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(FRM_FondoPricipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new FRM_FondoPricipal().setVisible(true);
+//                
+//                
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jl_Fondo;
+    private javax.swing.JLabel jl_Puntos;
     private javax.swing.JLabel numeros_Puntaje;
-    public javax.swing.JLabel obstaculo1;
+    private javax.swing.JLabel obstaculo1;
     public javax.swing.JLabel obstaculo2;
     public javax.swing.JLabel personaje;
     // End of variables declaration//GEN-END:variables
+
+    
 }

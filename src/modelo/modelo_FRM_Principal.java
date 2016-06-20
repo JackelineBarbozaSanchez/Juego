@@ -6,6 +6,7 @@
 package modelo;
 
 import Vista.FRM_FondoPricipal;
+import Vista.Registro_FRM_Principal;
 import static java.lang.Thread.sleep;
 
 /**
@@ -14,16 +15,24 @@ import static java.lang.Thread.sleep;
  */
 public class modelo_FRM_Principal  extends Thread{
     FRM_FondoPricipal ventanafondoPrincipal;
+    Registro_FRM_Principal regitro;
     int velocidad;
-    
-    public modelo_FRM_Principal(FRM_FondoPricipal fondoPrincipal)
+    boolean vivo;
+    int puntos;
+    public modelo_FRM_Principal(FRM_FondoPricipal fondoPrincipal,Registro_FRM_Principal registro)
     {
         velocidad = 7;
          ventanafondoPrincipal=fondoPrincipal;
-      
+         regitro=registro;
         
+      
     }
-    
+     public int contar()
+    {
+        puntos= ventanafondoPrincipal.contarPuntos() ;
+        return puntos;
+    }
+     
     
      public void run()
     {
@@ -31,22 +40,25 @@ public class modelo_FRM_Principal  extends Thread{
         {
             try 
             {
-                sleep(300);
+               sleep(300);
+              
                ventanafondoPrincipal.moverFondo();
                comprobarPersonaje();
                ventanafondoPrincipal.moverObstaculo();
                ventanafondoPrincipal.comprobarColision();
+               ventanafondoPrincipal.puntosEnAsenso();
+               
+              
             } catch (Exception e) 
             {
                 System.out.println("hubo un error en el hilo de ejemplo");
             }
-            
                        
         }
     }
      
       public void comprobarPersonaje()
-            {
+      {
                 if (ventanafondoPrincipal.estado.equals("subiendo"))
                 {
                    ventanafondoPrincipal.subirPersonaje();
@@ -65,9 +77,10 @@ public class modelo_FRM_Principal  extends Thread{
                 }
             }
       
-      public int getVelocidad() {
+      public int getVelocidad() 
+     {
         return velocidad;
-    }
+     }
       
    
 

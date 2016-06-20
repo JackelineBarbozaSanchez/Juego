@@ -5,19 +5,42 @@
  */
 package Vista;
 
+import com.sun.imageio.plugins.jpeg.JPEG;
+import modelo.Jugador;
+import modelo.modelo_FRM_Principal;
+
 /**
  *
  * @author Jaki
  */
 public class GameOver extends javax.swing.JFrame {
-
+   Registro_FRM_Principal registro;
    FRM_FondoPricipal principal;
-    public GameOver(FRM_FondoPricipal pricipal) {
+  
+   Jugador jugador;
+   String nombre;
+   
+    public GameOver(FRM_FondoPricipal pricipal, Jugador jugador) {
         
         initComponents();
-       principal=pricipal;
-        setLocation(400,300);
+        this.jugador=jugador;
+        this.principal=pricipal;
+        registro= new Registro_FRM_Principal();
+       
+        setLocation(200,100);
+        insertarNombre();
+       
         
+    
+    }
+    public void insertarNombre()
+    {
+       nombre_Guardado.setText(jugador.getNombre());
+        
+    }
+    public void puntos(String puntos)
+    {
+        this.puntosAcomulados.setText(puntos);
     }
 
     /**
@@ -29,31 +52,81 @@ public class GameOver extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        volverAJugar = new javax.swing.JButton();
+        salir = new javax.swing.JButton();
+        nombre_Guardado = new javax.swing.JLabel();
+        jl_PuntosEtiquta = new javax.swing.JLabel();
+        puntosAcomulados = new javax.swing.JLabel();
+        gameOver = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(1040, 494));
+        setMinimumSize(new java.awt.Dimension(1040, 494));
+        getContentPane().setLayout(null);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/over.jpe"))); // NOI18N
+        volverAJugar.setBackground(new java.awt.Color(102, 255, 102));
+        volverAJugar.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
+        volverAJugar.setForeground(new java.awt.Color(0, 0, 102));
+        volverAJugar.setText("Volver a Jugar");
+        volverAJugar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                volverAJugarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(volverAJugar);
+        volverAJugar.setBounds(20, 410, 160, 32);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(jLabel1)
-                .addContainerGap(97, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(jLabel1)
-                .addContainerGap(57, Short.MAX_VALUE))
-        );
+        salir.setBackground(new java.awt.Color(51, 255, 102));
+        salir.setFont(new java.awt.Font("Ebrima", 0, 18)); // NOI18N
+        salir.setForeground(new java.awt.Color(0, 0, 153));
+        salir.setText("Salir");
+        salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(salir);
+        salir.setBounds(830, 410, 130, 35);
+
+        nombre_Guardado.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        nombre_Guardado.setForeground(new java.awt.Color(0, 0, 0));
+        nombre_Guardado.setText("------");
+        getContentPane().add(nombre_Guardado);
+        nombre_Guardado.setBounds(50, 185, 110, 30);
+
+        jl_PuntosEtiquta.setFont(new java.awt.Font("Gill Sans Ultra Bold Condensed", 0, 36)); // NOI18N
+        jl_PuntosEtiquta.setForeground(new java.awt.Color(0, 0, 153));
+        jl_PuntosEtiquta.setText("Puntos");
+        getContentPane().add(jl_PuntosEtiquta);
+        jl_PuntosEtiquta.setBounds(390, 400, 140, 45);
+
+        puntosAcomulados.setFont(new java.awt.Font("Franklin Gothic Demi", 1, 24)); // NOI18N
+        puntosAcomulados.setForeground(new java.awt.Color(255, 0, 0));
+        puntosAcomulados.setText("0");
+        getContentPane().add(puntosAcomulados);
+        puntosAcomulados.setBounds(530, 410, 110, 40);
+
+        gameOver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagen/gameCaverDino.png"))); // NOI18N
+        getContentPane().add(gameOver);
+        gameOver.setBounds(0, 0, 1160, 463);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void volverAJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverAJugarActionPerformed
+        // TODO add your handling code here:
+        principal= new FRM_FondoPricipal(registro);
+        principal.setVisible(true);
+        principal.musica.play();
+        this.setVisible(false);
+       
+    }//GEN-LAST:event_volverAJugarActionPerformed
+
+    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+        // TODO add your handling code here:
+        System.exit(0);
+        
+    }//GEN-LAST:event_salirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -62,6 +135,11 @@ public class GameOver extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel gameOver;
+    private javax.swing.JLabel jl_PuntosEtiquta;
+    private javax.swing.JLabel nombre_Guardado;
+    private javax.swing.JLabel puntosAcomulados;
+    private javax.swing.JButton salir;
+    private javax.swing.JButton volverAJugar;
     // End of variables declaration//GEN-END:variables
 }
